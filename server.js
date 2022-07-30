@@ -30,6 +30,7 @@ app.get("/", (req, res) => {
 app.get("/pages/login", pagesController.showLoginPage);
 app.get("/pages/register", pagesController.showRegisterPage);
 app.post("/pages/register", userController.register);
+app.post("/pages/login", userController.login);
 
 // to show that app is running
 app.listen(port, async () => {
