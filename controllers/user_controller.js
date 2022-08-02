@@ -48,6 +48,34 @@ module.exports = {
       return;
     }
 
-    res.send("good!");
+    // log the user in by creating a session --> using 'session' middleware
+    req.session.regenerate(function (err) {
+      if (err) {
+        res.send("unable to regenerate session");
+        return;
+      }
+
+      // if no error, store user information in session, typically a user id
+      req.session.user = user.email;
+
+      // BE send FE --> s%3A3Rw0nHcjPAg2I8JJFG9eueggeZB_IG6g.UTbF%2FcFZJ41NihFPjU6Fbr0JPRcndjtgMgZJdKIZAm0
+      // FE saves as cookie
+      // subsequent req. to BE --> will send cookie and BE will authenticate this
+
+      // save the session before redirection to ensure page
+      // load does not happen before session is saved
+      req.session.save(function (err) {
+        if (err) {
+          res.send("unable to save session");
+          return;
+        }
+      });
+
+      res.redirect("/users/dashboard");
+    });
+  },
+
+  dashboard: (req, res) => {
+    res.render("../views/users/dashboard.ejs");
   },
 };
