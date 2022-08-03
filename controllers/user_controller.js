@@ -1,5 +1,6 @@
 const userModel = require("../models/users");
 const bcrypt = require("bcrypt");
+const postModel = require("../models/posts");
 
 module.exports = {
   register: async (req, res) => {
@@ -77,5 +78,24 @@ module.exports = {
 
   dashboard: (req, res) => {
     res.render("../views/users/dashboard.ejs");
+  },
+
+  newPost: async (req, res) => {
+    const formInput = req.body;
+    console.log(formInput);
+
+    // try {
+    //   await postModel.create({
+    //     userId: req.session.user,
+    //     location: null, //for time being
+    //     description: formInput.email,
+    //     password: hash,
+    //   });
+    // } catch (err) {
+    //   console.log(err);
+    //   res.send("failed to create user");
+    //   return;
+    // }
+    res.redirect("/users/dashboard");
   },
 };

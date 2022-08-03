@@ -4,6 +4,44 @@
 <div class="row">
     <div class="col">
         <h1>User details here</h1>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#post-modal">New post!</button>
+
+        <!-- Modal -->
+        <form method="POST" action="/users/dashboard>
+        <div class="modal fade" id="post-modal" tabindex="-1" aria-labelledby="post-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="/users/dashboard>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="post-title" placeholder="Title">
+                        <label for="post-title">Title</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="post-description" placeholder="Description">
+                        <label for="post-description">Description</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="post-image-url" placeholder="image-url">
+                        <label for="post-image-url">URL of image</label>
+                    </div>
+                    <div class="mb-3 text-center">
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Submit post - test</button>
+            </div>
+            </div>
+        </div>
+        </div>
     </div>
     <div class="col">
         <div id='map' style='width: 75vw; height: 100vh;'></div>
