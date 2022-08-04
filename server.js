@@ -52,7 +52,7 @@ app.get(
   authMiddleware.isAuthenticated,
   userController.dashboard
 );
-app.post("/users/dashboard", userController.newPost);
+app.post("/users/post", userController.newPost);
 
 //mapbox (doesnt work)
 // mapboxgl.accessToken =

@@ -82,20 +82,33 @@ module.exports = {
 
   newPost: async (req, res) => {
     const formInput = req.body;
-    console.log(formInput);
 
-    // try {
-    //   await postModel.create({
-    //     userId: req.session.user,
-    //     location: null, //for time being
-    //     description: formInput.email,
-    //     password: hash,
-    //   });
-    // } catch (err) {
-    //   console.log(err);
-    //   res.send("failed to create user");
-    //   return;
-    // }
+    // get user from DB
+    let user = null;
+
+    try {
+      user = await userModel.findOne({ email: req.session.user });
+    } catch (err) {
+      console.log(err);
+      res.redirect("/users/login");
+      return;
+    }
+
+    // create post in DB
+    try {
+      await postModel.create({
+        userId: user._id,
+        title: formInput.title, // title of post
+        location: formInput.location, // location of post
+        description: formInput.description,
+        imageUrl: formInput.imageUrl,
+        createdAt: new Date(),
+      });
+    } catch (err) {
+      console.log(err);
+      res.send("failed to create post");
+      return;
+    }
     res.redirect("/users/dashboard");
   },
 };
