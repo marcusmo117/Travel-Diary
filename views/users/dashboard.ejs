@@ -1,13 +1,38 @@
 <%- include('../partials/header'); %>
 
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
 
 <div class="container-fluid">
     <div class="row">
         <div class="col">
-            <h1>User details here</h1>
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#post-modal">New post!</button>
+            <h1 class="mb-3">Welcome <%= userName %> !</h1>
 
+            <!-- Button trigger modal -->
+             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#post-modal">New post!</button>
+
+            <!-- table containing posts -->
+            <div scroll-table style="height: 88vh; width: 20vw; overflow: auto;">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <% userPosts.forEach((post) => { %>
+                            <tr>
+                                <td>
+                                    <h3><%= post.title %></h3>
+                                    <div style="white-space:pre-wrap; word-wrap:break-word"><%= post.description %></div>
+                                    <div style="white-space:pre-wrap; word-wrap:break-word"><%= post.placeName %></div>
+                                    <div style="white-space:pre-wrap; word-wrap:break-word"><%= post.createdAt %></div>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
             <!-- Modal -->
             <div class="modal fade" id="post-modal" tabindex="-1" aria-labelledby="post-modal-label" aria-hidden="true">
                 <div class="modal-dialog">
@@ -16,14 +41,24 @@
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">New post</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                
                             </div>
                             <div class="modal-body">
+                                    <div id="geocoder" class="geocoder mb-3"></div>
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="post-title" placeholder="Title" name="title">
                                         <label for="post-title">Title</label>
                                     </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="post-location" placeholder="Location" name="location">
+                                    <div hidden class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="post-location-long" name="longitude">
+                                        <label for="post-location">Location</label>
+                                    </div>
+                                    <div hidden class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="post-location-lat" name="latitude">
+                                        <label for="post-location">Location</label>
+                                    </div>
+                                    <div hidden class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="post-place-name" name="placeName">
                                         <label for="post-location">Location</label>
                                     </div>
                                     <div class="form-floating mb-3">
@@ -50,56 +85,7 @@
     </div>
 </div>
 
-<script>
-  mapboxgl.accessToken = 'pk.eyJ1IjoibW93aXBlIiwiYSI6ImNsNmM5OTZ5cjF2dm0zaXA0ejQ2bXFpaHYifQ.-nQwU8ydtMSSBHoO5h0U2w';
-
-  navigator.geolocation.getCurrentPosition(successLocation, errorLocation, {
-    enableHighAccuracy: true
-  })
-
-  function successLocation(position) {
-    setupMap([position.coords.longitude, position.coords.latitude])
-  }
-
-  function errorLocation() {
-    setupMap([-2.24, 53.48])
-  }
-
-  async function setupMap(center) {
-    const map = await new mapboxgl.Map({
-        container: "map",
-        style: "mapbox://styles/mapbox/streets-v11",
-        projection: "globe",
-        center: center,
-        zoom: 5
-    });
-
-    map.on('style.load', () => {
-        map.setFog({
-            color: 'rgb(186, 210, 235)', // Lower atmosphere
-            'high-color': 'rgb(36, 92, 223)', // Upper atmosphere
-            'horizon-blend': 0.02, // Atmosphere thickness (default 0.2 at low zooms)
-            'space-color': 'rgb(11, 11, 25)', // Background color
-            'star-intensity': 0.6 // Background star brightness (default 0.35 at low zoooms )
-        });
-    })
-    
-
-  const nav = new mapboxgl.NavigationControl()
-  map.addControl(nav)
-  }
-
-
-//   map.on('style.load', () => {
-//     map.setFog({
-//         color: 'rgb(186, 210, 235)', // Lower atmosphere
-//         'high-color': 'rgb(36, 92, 223)', // Upper atmosphere
-//         'horizon-blend': 0.02, // Atmosphere thickness (default 0.2 at low zooms)
-//         'space-color': 'rgb(11, 11, 25)', // Background color
-//         'star-intensity': 0.6 // Background star brightness (default 0.35 at low zoooms )
-//     });
-//   });
-</script>
+<script src="/map.js"></script>
 
 
 </main>

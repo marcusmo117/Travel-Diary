@@ -1,6 +1,7 @@
 const userModel = require("../models/users");
 const bcrypt = require("bcrypt");
 const postModel = require("../models/posts");
+const { name } = require("ejs");
 
 module.exports = {
   register: async (req, res) => {
@@ -76,8 +77,13 @@ module.exports = {
     });
   },
 
-  dashboard: (req, res) => {
-    res.render("../views/users/dashboard.ejs");
+  dashboard: async (req, res) => {
+    const user = await userModel.findOne({ email: req.session.user });
+    const userName = user.name;
+    const userID = user._id;
+    const userPosts = await postModel.find({ userId: userID });
+    console.log(userPosts);
+    res.render("../views/users/dashboard.ejs", { userName, userPosts });
   },
 
   newPost: async (req, res) => {
@@ -99,7 +105,9 @@ module.exports = {
       await postModel.create({
         userId: user._id,
         title: formInput.title, // title of post
-        location: formInput.location, // location of post
+        longitude: formInput.longitude, // location of post
+        latitude: formInput.latitude,
+        placeName: formInput.placeName,
         description: formInput.description,
         imageUrl: formInput.imageUrl,
         createdAt: new Date(),
@@ -110,5 +118,10 @@ module.exports = {
       return;
     }
     res.redirect("/users/dashboard");
+  },
+
+  listPosts: async (req, res) => {
+    const posts = await postModel.find().exec();
+    res.send(posts);
   },
 };

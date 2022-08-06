@@ -33,6 +33,7 @@ app.use(
   })
 );
 app.use(authMiddleware.setAuthUserVar);
+app.use(express.static("public"));
 
 //routes
 //default route
@@ -40,11 +41,7 @@ app.get("/", (req, res) => {
   res.send("Working!");
 });
 app.get("/pages/login", pagesController.showLoginPage);
-app.get(
-  "/pages/register",
-  authMiddleware.isAuthenticated,
-  pagesController.showRegisterPage
-);
+app.get("/pages/register", pagesController.showRegisterPage);
 app.post("/pages/register", userController.register);
 app.post("/pages/login", userController.login);
 app.get(
@@ -53,14 +50,7 @@ app.get(
   userController.dashboard
 );
 app.post("/users/post", userController.newPost);
-
-//mapbox (doesnt work)
-// mapboxgl.accessToken =
-// "pk.eyJ1IjoibW93aXBlIiwiYSI6ImNsNmM5OTZ5cjF2dm0zaXA0ejQ2bXFpaHYifQ.-nQwU8ydtMSSBHoO5h0U2w";
-// const map = new mapboxgl.Map({
-// container: "map",
-// style: "mapbox://styles/mapbox/streets-v11",
-// });
+app.get("/users/post", userController.listPosts);
 
 // to show that app is running
 app.listen(port, async () => {
