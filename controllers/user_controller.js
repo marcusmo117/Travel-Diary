@@ -110,7 +110,7 @@ module.exports = {
         placeName: formInput.placeName,
         description: formInput.description,
         imageUrl: formInput.imageUrl,
-        createdAt: new Date(),
+        createdAt: formInput.date,
       });
     } catch (err) {
       console.log(err);
@@ -123,5 +123,40 @@ module.exports = {
   listPosts: async (req, res) => {
     const posts = await postModel.find().exec();
     res.send(posts);
+  },
+
+  deletePost: async (req, res) => {
+    const postId = req.params.post_id;
+    postModel.findByIdAndRemove(postId, function (err) {
+      if (err) {
+        res.redirect("/users/dashboard");
+      } else {
+        res.redirect("/users/dashboard");
+      }
+    });
+  },
+
+  updatePost: async (req, res) => {
+    const formInput = req.body;
+
+    //update post in DB
+    postModel.findOneAndUpdate(
+      { _id: req.params.post_id },
+      {
+        title: formInput.title,
+        description: formInput.description,
+        imageUrl: formInput.imageUrl,
+        createdAt: formInput.date,
+        updatedAt: new Date(),
+      },
+      { upsert: true },
+      function (err) {
+        if (err) {
+          res.redirect("/users/dashboard");
+        } else {
+          res.redirect("/users/dashboard");
+        }
+      }
+    );
   },
 };

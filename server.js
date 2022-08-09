@@ -40,17 +40,23 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.send("Working!");
 });
+//get routes
 app.get("/pages/login", pagesController.showLoginPage);
 app.get("/pages/register", pagesController.showRegisterPage);
-app.post("/pages/register", userController.register);
-app.post("/pages/login", userController.login);
 app.get(
   "/users/dashboard",
   authMiddleware.isAuthenticated,
   userController.dashboard
 );
-app.post("/users/post", userController.newPost);
 app.get("/users/post", userController.listPosts);
+//post routes
+app.post("/pages/register", userController.register);
+app.post("/pages/login", userController.login);
+app.post("/users/post", userController.newPost);
+//delete route
+app.delete("/users/post/:post_id", userController.deletePost);
+//update route
+app.put("/users/post/:post_id", userController.updatePost);
 
 // to show that app is running
 app.listen(port, async () => {

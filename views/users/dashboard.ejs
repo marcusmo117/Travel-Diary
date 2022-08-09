@@ -9,7 +9,7 @@
             <h1 class="mb-3">Welcome <%= userName %> !</h1>
 
             <!-- Button trigger modal -->
-             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#post-modal">New post!</button>
+             <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#post-modal">New post!</button>
 
             <!-- table containing posts -->
             <div scroll-table style="height: 88vh; width: 20vw; overflow: auto;">
@@ -20,20 +20,123 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <% userPosts.forEach((post) => { %>
+                        <% const userPostsSorted = userPosts.sort((a, b) => { %>
+                        <%   return (a.createdAt > b.createdAt) ? -1 : ((a.createdAt < b.createdAt) ? 1 : 0) %>
+                        <% }); %>
+                        <% [...userPostsSorted].forEach((post) => { %>
                             <tr>
                                 <td>
                                     <h3><%= post.title %></h3>
-                                    <div style="white-space:pre-wrap; word-wrap:break-word"><%= post.description %></div>
-                                    <div style="white-space:pre-wrap; word-wrap:break-word"><%= post.placeName %></div>
-                                    <div style="white-space:pre-wrap; word-wrap:break-word"><%= post.createdAt %></div>
+                                    <!-- <div style="white-space:pre-wrap; word-wrap:break-word"><%= post.description %></div> -->
+                                    <% if (post.updatedAt) { %>
+                                        <div class="mb-1" style="white-space:pre-wrap; word-wrap:break-word; font-size:12px;"><%= post.createdAt.toString().slice(0, 15) + " (last updated: " + post.updatedAt.toString().slice(0, 15) + ")"%></div>
+                                    <% } else { %>
+                                        <div class="mb-1" style="white-space:pre-wrap; word-wrap:break-word; font-size:12px;"><%= post.createdAt.toString().slice(0, 15) %></div>
+                                    <% } %>
+                                    <div class="fst-italic mb-2" style="white-space:pre-wrap; word-wrap:break-word"><%= post.placeName %></div>
+                                    <a class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#desc-modal-<%= post._id %>" role="button">View description</a>
+                                    <a class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#update-modal-<%= post._id %>" role="button">Edit</a>
+                                    <a class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete-modal-<%= post._id %>" role="button">Delete</a>
                                 </td>
                             </tr>
                         <% }) %>
                     </tbody>
                 </table>
             </div>
-            <!-- Modal -->
+            <% userPosts.forEach((post) => { %>
+                <!-- Description modal -->
+                <div class="modal fade" id="desc-modal-<%= post._id %>" tabindex="-1" aria-labelledby="post-modal-label" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel"><%= post.title %></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-2" style="white-space:pre-wrap; word-wrap:break-word; font-size:12px"><%= post.createdAt.toString().slice(0,15) %></div>
+                                <div class="mb-3" style="white-space:pre-wrap; word-wrap:break-word"><%= post.description %></div>
+                                <div class="fst-italic" style="white-space:pre-wrap; word-wrap:break-word"><%= post.placeName %></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-warning">Edit</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Update modal -->
+                 <div class="modal fade" id="update-modal-<%= post._id %>" tabindex="-1" aria-labelledby="post-modal-label" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="POST" action="post/<%= post._id %>?_method=PUT">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Edit <%= post.title %></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                        <!-- <div id="update-geocoder-<%= post._id %>" class="geocoder mb-3" value="<%= post.placeName %>"></div> -->
+                                        <div class="form-floating mb-3">
+                                            <input type="date" class="form-control" id="post-date" placeholder="Date" name="date">
+                                            <label for="post-date">Date</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="post-title" placeholder="Title" name="title" value="<%= post.title %>">
+                                            <label for="post-title">Title</label>
+                                        </div>
+                                        <!-- <div hidden class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="post-location-long" name="longitude">
+                                            <label for="post-location">Location</label>
+                                        </div>
+                                        <div hidden class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="post-location-lat" name="latitude">
+                                            <label for="post-location">Location</label>
+                                        </div>
+                                        <div hidden class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="post-place-name" name="placeName">
+                                            <label for="post-location">Location</label>
+                                        </div> -->
+                                        <div class="form-floating mb-3">
+                                            <textarea rows="3" style="height: 100%;" class="form-control" id="post-description" placeholder="Description" name="description"><%= post.description %></textarea>
+                                            <label for="post-description">Description</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="post-image-url" placeholder="image-url" name="imageUrl" value="<%= post.imageUrl %>">
+                                            <label for="post-image-url">URL of image</label>
+                                        </div>
+                                        <!-- KIV THIS!! <div hidden class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="post-id" name="postId" value="<%= post._id %>">
+                                            <label for="post-Id">Post ID</label>
+                                        </div> --> 
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Delete modal -->
+                <div class="modal fade" id="delete-modal-<%= post._id %>" tabindex="-1" aria-labelledby="post-modal-label" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Delete <%= post.title %></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3" style="white-space:pre-wrap; word-wrap:break-word">Are you sure you want to delete this Post? This action cannot be undone.</div>                            </div>
+                            <div class="modal-footer">
+                                <form method="POST" action="post/<%= post._id %>?_method=DELETE">
+                                    <button type="Delete" class="btn btn-danger">Delete</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+            <!-- Post modal -->
             <div class="modal fade" id="post-modal" tabindex="-1" aria-labelledby="post-modal-label" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -45,6 +148,10 @@
                             </div>
                             <div class="modal-body">
                                     <div id="geocoder" class="geocoder mb-3"></div>
+                                    <div class="form-floating mb-3">
+                                        <input type="date" class="form-control" id="post-date" placeholder="Date" name="date">
+                                        <label for="post-date">Date</label>
+                                    </div>
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="post-title" placeholder="Title" name="title">
                                         <label for="post-title">Title</label>
@@ -62,7 +169,7 @@
                                         <label for="post-location">Location</label>
                                     </div>
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="post-description" placeholder="Description" name="description">
+                                        <textarea rows="3" style="height: 100%;" class="form-control" id="post-description" placeholder="Description" name="description"></textarea>
                                         <label for="post-description">Description</label>
                                     </div>
                                     <div class="form-floating mb-3">
