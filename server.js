@@ -1,4 +1,5 @@
 //libraries?
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
@@ -11,9 +12,8 @@ const pagesController = require("./controllers/pages_controller");
 const authMiddleware = require("./middlewares/auth_middlewares");
 
 const app = express();
-const port = 3000;
-const connStr =
-  "mongodb+srv://marcusmo:oAd8hk511aEXKw5w@marcuscluster1.mj37dyq.mongodb.net/?retryWrites=true&w=majority";
+const port = process.env.PORT || 3000;
+const connStr = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@marcuscluster1.mj37dyq.mongodb.net/?retryWrites=true&w=majority`;
 
 // set view engine
 app.set("view engine", "ejs");
@@ -26,7 +26,7 @@ app.use(methodOverride("_method"));
 // this middleware is for creating a session
 app.use(
   session({
-    secret: "123",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false, httpOnly: false, maxAge: 7200000 },
