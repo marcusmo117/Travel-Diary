@@ -3,6 +3,11 @@ const bcrypt = require("bcrypt");
 const postModel = require("../models/posts");
 const { name } = require("ejs");
 
+// for image upload
+const cloudinary = require("../middlewares/cloudinary_middleware");
+const upload = require("../middlewares/multer_middlware");
+const User = require("../models/posts");
+
 module.exports = {
   register: async (req, res) => {
     // to add validations
@@ -87,6 +92,14 @@ module.exports = {
   },
 
   newPost: async (req, res) => {
+    //upload image to cloudinary
+    let result = null;
+    try {
+      result = await cloudinary.uploader.upload(req.file.path);
+    } catch (err) {
+      console.log(err);
+    }
+
     const formInput = req.body;
 
     // get user from DB
@@ -109,7 +122,7 @@ module.exports = {
         latitude: formInput.latitude,
         placeName: formInput.placeName,
         description: formInput.description,
-        imageUrl: formInput.imageUrl,
+        imageUrl: result.secure_url,
         createdAt: formInput.date,
       });
     } catch (err) {

@@ -6,6 +6,11 @@ const methodOverride = require("method-override");
 const session = require("express-session");
 // const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
 
+//for image upload
+const cloudinary = require("./middlewares/cloudinary_middleware");
+const upload = require("./middlewares/multer_middlware");
+const User = require("./models/posts");
+
 // linking from other files
 const userController = require("./controllers/user_controller");
 const pagesController = require("./controllers/pages_controller");
@@ -52,7 +57,7 @@ app.get("/users/post", userController.listPosts);
 //post routes
 app.post("/pages/register", userController.register);
 app.post("/pages/login", userController.login);
-app.post("/users/post", userController.newPost);
+app.post("/users/post", upload.single("image"), userController.newPost);
 //delete route
 app.delete("/users/post/:post_id", userController.deletePost);
 //update route

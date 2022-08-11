@@ -140,7 +140,7 @@
             <div class="modal fade" id="post-modal" tabindex="-1" aria-labelledby="post-modal-label" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <form method="POST" action="/users/post">
+                        <form method="POST" action="/users/post" enctype="multipart/form-data">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">New post</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -172,9 +172,9 @@
                                         <textarea rows="3" style="height: 100%;" class="form-control" id="post-description" placeholder="Description" name="description"></textarea>
                                         <label for="post-description">Description</label>
                                     </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="post-image-url" placeholder="image-url" name="imageUrl">
-                                        <label for="post-image-url">URL of image</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="image" name="image">
+                                        <label class="custom-file-label" for="image">Upload picture</label>
                                     </div>
                             </div>
                             <div class="modal-footer">
