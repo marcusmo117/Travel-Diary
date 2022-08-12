@@ -1,1 +1,1 @@
-web: nmp start
+web:nmp start
