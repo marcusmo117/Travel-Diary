@@ -19,7 +19,7 @@ async function setupMap(center) {
     style: "mapbox://styles/mapbox/streets-v11",
     projection: "globe",
     center: center,
-    zoom: 5,
+    zoom: 3,
   });
 
   map.on("style.load", () => {
@@ -97,6 +97,7 @@ async function addMarker(map) {
     const title = post.title;
     const description = post.description;
     const place = post.placeName;
+    const image = post.imageUrl;
     this.popup = new mapboxgl.Popup().setHTML(
       "<h1>" +
         title +
@@ -107,7 +108,10 @@ async function addMarker(map) {
         "<p>" +
         place +
         "</p>" +
-        "<p><img src=https://www.w3schools.com/images/picture.jpg style=witdh:20px></img></p>"
+        "<p><img src='" +
+        image +
+        "'" +
+        "class='img-thumbnail'></img></p>"
     );
     this.post = new mapboxgl.Marker()
       .setLngLat([long, lat])
@@ -115,5 +119,3 @@ async function addMarker(map) {
       .addTo(map);
   });
 }
-
-// adding posts to list

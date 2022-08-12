@@ -134,8 +134,12 @@ module.exports = {
   },
 
   listPosts: async (req, res) => {
-    const posts = await postModel.find().exec();
+    const user = await userModel.findOne({ email: req.session.user });
+    const userID = user._id;
+    const posts = await postModel.find({ userId: userID });
     res.send(posts);
+    // const posts = await postModel.find().exec();
+    // res.send(posts);
   },
 
   deletePost: async (req, res) => {

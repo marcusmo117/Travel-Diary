@@ -12,7 +12,7 @@
              <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#post-modal">New post!</button>
 
             <!-- table containing posts -->
-            <div scroll-table style="height: 88vh; width: 20vw; overflow: auto;">
+            <div scroll-table style="height: 88vh; width: 20vw; overflow: auto; scrollbar-color: white;">
                 <table class="table">
                     <thead>
                     <tr>
@@ -29,7 +29,7 @@
                                     <h3><%= post.title %></h3>
                                     <!-- <div style="white-space:pre-wrap; word-wrap:break-word"><%= post.description %></div> -->
                                     <% if (post.updatedAt) { %>
-                                        <div class="mb-1" style="white-space:pre-wrap; word-wrap:break-word; font-size:12px;"><%= post.createdAt.toString().slice(0, 15) + " (last updated: " + post.updatedAt.toString().slice(0, 15) + ")"%></div>
+                                        <div class="mb-1" style="white-space:pre-wrap; word-wrap:break-word; font-size:12px;"><%= post.createdAt.toString().slice(0, 15) + " (Edited: " + post.updatedAt.toString().slice(0, 15) + ")"%></div>
                                     <% } else { %>
                                         <div class="mb-1" style="white-space:pre-wrap; word-wrap:break-word; font-size:12px;"><%= post.createdAt.toString().slice(0, 15) %></div>
                                     <% } %>
@@ -46,7 +46,7 @@
             <% userPosts.forEach((post) => { %>
                 <!-- Description modal -->
                 <div class="modal fade" id="desc-modal-<%= post._id %>" tabindex="-1" aria-labelledby="post-modal-label" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-dialog modal-dialog-centered modal-xl">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel"><%= post.title %></h5>
@@ -55,10 +55,11 @@
                             <div class="modal-body">
                                 <div class="mb-2" style="white-space:pre-wrap; word-wrap:break-word; font-size:12px"><%= post.createdAt.toString().slice(0,15) %></div>
                                 <div class="mb-3" style="white-space:pre-wrap; word-wrap:break-word"><%= post.description %></div>
+                                <img src="<%= post.imageUrl %>" class="img-fluid">
                                 <div class="fst-italic" style="white-space:pre-wrap; word-wrap:break-word"><%= post.placeName %></div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-warning">Edit</button>
+                                <button type="submit" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update-modal-<%= post._id %>">Edit</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
@@ -76,7 +77,7 @@
                                 <div class="modal-body">
                                         <!-- <div id="update-geocoder-<%= post._id %>" class="geocoder mb-3" value="<%= post.placeName %>"></div> -->
                                         <div class="form-floating mb-3">
-                                            <input type="date" class="form-control" id="post-date" placeholder="Date" name="date">
+                                            <input type="date" class="form-control" id="post-date" placeholder="Date" name="date" required>
                                             <label for="post-date">Date</label>
                                         </div>
                                         <div class="form-floating mb-3">
@@ -100,7 +101,7 @@
                                             <label for="post-description">Description</label>
                                         </div>
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="post-image-url" placeholder="image-url" name="imageUrl" value="<%= post.imageUrl %>">
+                                            <input type="text" class="form-control" id="post-image-url" placeholder="image-url" name="imageUrl" value="<%= post.imageUrl %>" disabled>
                                             <label for="post-image-url">URL of image</label>
                                         </div>
                                         <!-- KIV THIS!! <div hidden class="form-floating mb-3">
